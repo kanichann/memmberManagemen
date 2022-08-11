@@ -1,0 +1,16 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.ttl-1 {
+  @apply text-xl font-bold mb-6;
+}
+.ttl-2 {
+  @apply text-lg mb-2;
+}
+
+.btn {
+  @apply px-4 py-2 text-neutral-700 bg-orange-300  rounded-sm border border-neutral-700;
+}

@@ -1,0 +1,35 @@
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__container {
+    position: relative;
+    flex: 1;
+  }
+
+  &__item {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background-color: #fff;
+
+    &-enter {
+      opacity: 0;
+
+      &-active {
+        transition: all .3s linear;
+        opacity: 1;
+      }
+    }
+    &-exit {
+      opacity: 1;
+
+      &-active {
+        transition: all .3s linear;
+        opacity: 0;
+      }
+    }
+  }
+}

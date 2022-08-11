@@ -1,0 +1,30 @@
+.schedule {
+  border-collapse: collapse;
+  border-color: #fcfcfc;
+  & th {
+    font-weight: 400;
+    width: 10rem;
+    padding: 0.25rem;
+    background-color: #ffea2f;
+    border: 1px #afafaf solid;
+  }
+  & td {
+    vertical-align: top;
+    padding: 0.25rem 0.5rem;
+    width: 8rem;
+    height: 6rem;
+    border: 1px #afafaf solid;
+
+    &.diff {
+      background-color: rgb(246, 246, 246);
+      color: #999;
+    }
+  }
+}
+
+.button {
+  font-size: 1.2rem;
+  padding: 0 0.5rem;
+  border: 1px solid #333;
+  background-color: #ffea2f;
+}
