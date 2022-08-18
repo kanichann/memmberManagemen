@@ -15,6 +15,7 @@ const NotificationDetail = (props) => {
 
 
     const confirmHandler = async (notificationId) => {
+        props.delete();
         let data = new URLSearchParams();
         data.append("id", notificationId);
         await axios({
@@ -38,7 +39,7 @@ const NotificationDetail = (props) => {
         closeModal();
     }
     return (
-        <Modal closeModal={closeModal}>
+        <>
             <p>{props.data.date}</p>
             <dl>
 
@@ -52,8 +53,7 @@ const NotificationDetail = (props) => {
                     }
                 </dd>
             </dl>
-        </Modal>
-
+        </>
     )
 }
 

@@ -5,7 +5,7 @@ import Calender from "../components/calender";
 import { UserContext } from "../context/user-context";
 import CalenderProvider from '../context/calender-context'
 import Loading from "../components/UI/loading";
-import Notification from '../components/notification'
+import NotificationAdmin from '../components/notificationadmin'
 const Admin = () => {
     const userCtx = useContext(UserContext);
 
@@ -50,7 +50,7 @@ const Admin = () => {
                 <section className="col-start-3 col-end-5">
                     <Box>
                         <h2 className="ttl-2">お知らせ</h2>
-                        <Notification />
+                        <NotificationAdmin />
                         <Link to='/notificationAll' className="btn">一覧をみる</Link>
                     </Box>
                 </section>

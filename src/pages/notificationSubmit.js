@@ -1,5 +1,5 @@
 
-import React, { useContext, useReducer } from "react";
+import React, { useContext, useReducer, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Box from "../components/UI/box";
 import Calender from "../components/calender";
@@ -13,63 +13,135 @@ import TextInput from '../components/UI/textInput';
 import FileInput from '../components/UI/fileInput';
 import axios from 'axios';
 
-const reducer = (state, action) => {
-
+const inputReducer = (state, action) => {
     switch (action.type) {
-        case 'title':
-            return { ...state, title: action.payload }
-        case 'contents':
-            return { ...state, contents: action.payload }
-        case 'type':
-            return { ...state, type: action.payload }
-        case 'pdf':
-            return { ...state, pdf: action.payload }
-        case 'pdfname':
-            return { ...state, pdfname: action.payload }
-        case 'loading':
-            return { ...state, loading: action.payload }
-        case 'end':
-            return { ...state, end: action.payload }
+        case 'change':
+            let formIsValid = true;
+            for (const inputId in state.inputs) {
+                if (inputId === action.inputId) {
+                    formIsValid = formIsValid && action.isValid
+                }
+                else {
+                    formIsValid = formIsValid && state.inputs[inputId].isValid
+                }
+            }
+
+            return {
+                ...state,
+                inputs: {
+                    ...state.inputs,
+                    [action.inputId]: { value: action.val, isValid: action.isValid },
+                },
+                isValid: formIsValid
+            };
         case 'err':
-            return { ...state, err: action.payload }
+            return {
+                ...state,
+                err: action.val
+            }
+        case 'loading':
+            return {
+                ...state,
+                lading: action.val
+            }
+        case 'end':
+            return {
+                ...state,
+                end: action.val
+            }
         default:
-            return state
+            return state;
     }
+    // switch (action.type) {
+    //     case 'title':
+    //         return { ...state, title: action.payload }
+    //     case 'contents':
+    //         return { ...state, contents: action.payload }
+    //     case 'type':
+    //         return { ...state, type: action.payload }
+    //     case 'pdf':
+    //         return { ...state, pdf: action.payload }
+    //     case 'pdfname':
+    //         return { ...state, pdfname: action.payload }
+    //     case 'loading':
+    //         return { ...state, loading: action.payload }
+    //     case 'end':
+    //         return { ...state, end: action.payload }
+    //     case 'err':
+    //         return { ...state, err: action.payload }
+    //     default:
+    //         return state
+    // }
 }
-const initialState = {
-    title: '',
-    contents: '',
-    type: 0,
-    pdf: '',
-    pdfname: '',
-    loading: false,
-    end: '',
-    err: '',
-}
+
+
+// const initialState = {
+//     title: '',
+//     contents: '',
+//     type: 0,
+//     pdf: '',
+//     pdfname: '',
+//     loading: false,
+//     end: '',
+//     err: '',
+// }
 
 const NotificationSubmit = () => {
     const userCtx = useContext(UserContext);
-    const [state, dispatch] = useReducer(reducer, initialState);
+    const [noatificationState, dispatch] = useReducer(inputReducer, {
+        inputs: {
+            title: {
+                value: '',
+                isValid: false,
+            },
+            contents: {
+                value: '',
+                isValid: false,
+            },
+            type: {
+                value: '',
+                isValid: false,
+            },
+            pdf: {
+                value: '',
+                isValid: false,
+            },
+            pdfname: {
+                value: '',
+                isValid: false,
+            },
+
+        },
+        err: '',
+        end: '',
+        loading: '',
+        isValid: false
+    })
+
+    const inputHandler = useCallback((inputId, val, isValid) => {
+        console.log(inputId);
+        return dispatch({ inputId: inputId, type: 'change', val: val, isValid: isValid })
+    }, [])
+
+
 
     async function submitHandler(event) {
         event.preventDefault();
         dispatch({
             type: "err",
-            payload: '',
+            val: '',
         });
         dispatch({
             type: 'loading',
-            payload: true
+            val: true
         })
         const data = new FormData()
-        console.log(data);
-        let { title, contents, type, pdf, pdfname } = state;
 
-        data.set("title", title);
-        data.set("contents", contents);
-        data.append("type", +type);
-        data.append("file", pdf);
-        data.append("pdfname", pdfname);
+        data.set("title", noatificationState.inputs.title.value);
+        data.set("contents", noatificationState.inputs.contents.value);
+        data.append("type", +noatificationState.inputs.type.value);
+        data.append("file", noatificationState.inputs.pdf.value);
+        data.append("pdfname", noatificationState.inputs.pdfname.value);
 
 
         await axios.post('http://localhost:3002/notification/set', data, {
@@ -81,16 +153,16 @@ const NotificationSubmit = () => {
             console.log(res.data, 'schedule更新');
             dispatch({
                 type: 'loading',
-                payload: false
+                val: false
             })
         }).catch(err => {
             console.log(err);
             dispatch({
                 type: 'loading',
-                payload: false
+                val: false
             })
             dispatch({
-                type: 'err', payload: err.response.data.msg
+                type: 'err', val: err.response.data.msg
             });
 
         })
@@ -106,19 +178,8 @@ const NotificationSubmit = () => {
                     <h1 className="ttl-1">メッセージ送信</h1>
                     <form onSubmit={submitHandler} enctype="multipart/form-data">
                         {/* 予定名　予定詳細　タイプ　開始時間　終了時間 */}
-                        <Input nameid="title" val={state.title} type="text" labelName="件名" handler={(e) => {
-                            dispatch({
-                                type: "title",
-                                payload: e.target.value
-                            });
-                        }} />
-                        <SelectInput nameid="type" val={state.type} labelName="タイプ" handler={(e) => {
-
-                            dispatch({
-                                type: "type",
-                                payload: e.target.value
-                            });
-                        }}>
+                        <Input name="title" type="text" labelName="件名" handler={inputHandler} />
+                        <Input type="select" name="type" labelName="タイプ" handler={inputHandler}>
                             <option value="0">
                                 お知らせ
                             </option>
@@ -128,31 +189,16 @@ const NotificationSubmit = () => {
                             <option value="2">
                                 大会情報
                             </option>
-                        </SelectInput>
-                        <TextInput nameid="contents" val={state.contents} labelName="内容" handler={(e) => {
-                            dispatch({
-                                type: "contents",
-                                payload: e.target.value
-                            });
-                        }} />
-                        <FileInput labelName="PDFアップロード" nameid="pdf" handler={(e) => {
-                            dispatch({
-                                type: "pdf",
-                                payload: e
-                            });
-                        }} />
-                        <Input nameid="pdfname" val={state.pdfname} type="text" labelName="PDFのタイトル" handler={(e) => {
-                            dispatch({
-                                type: "pdfname",
-                                payload: e.target.value
-                            });
-                        }} />
+                        </Input>
+                        <Input type="textarea" name="contents" labelName="内容" handler={inputHandler} />
+                        <Input labelName="PDFアップロード" type="file" name="pdf" handler={inputHandler} />
+                        <Input name="pdfname" type="text" labelName="PDFのタイトル" handler={inputHandler} />
 
 
                         <button className='btn mt-2'>送信</button>
-                        {state.loading && <Loading />}
-                        {state.end && <p>通知を送信いたしました。</p>}
-                        {state.err && <p className="mt-6 text-red-400">{state.err}</p>}
+                        {noatificationState.loading && <Loading />}
+                        {noatificationState.end && <p>通知を送信いたしました。</p>}
+                        {noatificationState.err && <p className="mt-6 text-red-400">{noatificationState.err}</p>}
 
                     </form>
                 </Box>

@@ -1,10 +1,11 @@
+
 import react, { useContext } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NotificationContext } from "../context/notification-context";
 import Modal from './UI/modal';
 import NotificationDetail from './notificationDetail';
-const Notification = (props) => {
+const NotificationAdmin = (props) => {
     const NotificationCtx = useContext(NotificationContext);
     const [notificationdata, setNotificationdata] = useState("");
     return (
@@ -17,7 +18,7 @@ const Notification = (props) => {
 
             </dl>
             <Modal show={notificationdata} delete={() => { setNotificationdata((val) => !val) }}>
-                <NotificationDetail read={true} delete={() => { setNotificationdata((val) => !val) }} data={notificationdata} />
+                <NotificationDetail delete={() => { setNotificationdata((val) => !val) }} data={notificationdata} />
             </Modal>
             {/* {notificationdata && <NotificationDetail read={true} delete={() => { setNotificationdata(null) }} data={notificationdata} />} */}
         </>
@@ -25,4 +26,4 @@ const Notification = (props) => {
     )
 }
 
-export default Notification
+export default NotificationAdmin

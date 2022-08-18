@@ -13,7 +13,7 @@ const CalendarCell = (props) => {
     const scheduleBox_glay = "block text-left w-full shadow-sm text-xs border border-gray-200 bg-gray-50 overflow-hidden px-1"
     const scheduleBox_red = "block text-left w-full shadow-sm text-xs border border-gray-200 bg-red-100 overflow-hidden px-1"
     const scheduleBox_green = "block text-left w-full shadow-sm text-xs border border-gray-200 bg-green-100 overflow-hidden px-1"
-
+    console.log(detailShow, '4444444')
     return (
         <>
             <td className={props.highLight && "bg-amber-300"}>
@@ -42,12 +42,13 @@ const CalendarCell = (props) => {
                     {props.highLight && <div>today</div>}
 
                 </div>
-                    <Modal show={detailInsertShow} delete={() => { setDetailInsertShow((val) => !val) }}>
-<ScheduleDetailInsert  delete={() => { setDetailInsertShow((val) => !val) }} scheduleDataNum={props.scheduleDataNum} scheduleDate={props.scheduleDate} />
-    </Modal>
- {/* <Modal show={detailShow} closeModal= { ()=>{setDetailShow(() => false)} }>
-               <ScheduleDetail show={detailShow} delete={() => { setDetailShow(() => null) }} schedule={detailShow} scheduleDataNum={props.scheduleDataNum} scheduleDate={props.scheduleDate} />
-               </Modal> */}
+                <Modal show={detailInsertShow} delete={() => { setDetailInsertShow((val) => !val) }}>
+                    <ScheduleDetailInsert delete={() => { setDetailInsertShow((val) => !val) }} scheduleDataNum={props.scheduleDataNum} scheduleDate={props.scheduleDate} />
+                </Modal>
+
+                <Modal show={detailShow} delete={() => { setDetailShow(() => false) }}>
+                    <ScheduleDetail show={detailShow} delete={() => { setDetailShow(() => false) }} schedule={detailShow} scheduleDataNum={props.scheduleDataNum} scheduleDate={props.scheduleDate} />
+                </Modal>
 
             </td>
         </>

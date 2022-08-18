@@ -23,7 +23,7 @@ import { TransitionGroup, CSSTransition } from 'react-transition-group'
 function App() {
   const location = useLocation()
   const userCtx = useContext(UserContext);
-   const timeout = { enter: 1000, exit: 1000 };
+  const timeout = { enter: 1000, exit: 1000 };
   // const transitions = useTransition(location, {
   //   from: { opacity: 0 },
   //   enter: { opacity: 1 },
@@ -43,11 +43,11 @@ function App() {
 
       <TransitionGroup comoponent={null}>
         <CSSTransition
-        key={location.key}
+          key={location.key}
           classNames="fade"
           timeout={400}
         >
-        
+
           <Routes location={location}>
             {!userCtx.token && (
               <>
@@ -56,7 +56,7 @@ function App() {
 
                 <Route path='*' element={<Navigate to="/login" />} />
               </>
-             )
+            )
             }
 
 
@@ -82,9 +82,8 @@ function App() {
             </>
             )
             }
-}
           </Routes>
-          </CSSTransition>
+        </CSSTransition>
       </TransitionGroup>
     </Layout>
 

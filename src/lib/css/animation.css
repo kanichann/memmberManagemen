@@ -12,8 +12,6 @@
   opacity: 0;
 }
 
-
-
 .fade-enter {
   opacity: 0;
   transform: translate(10px, 0);
@@ -36,8 +34,6 @@
   transition: opacity 100ms ease-out, transform 200ms ease;
 }
 
-
-
 .modal-fade-enter {
   opacity: 0;
   z-index: 1;
@@ -53,5 +49,5 @@
 .modal-fade-exit.modal-fade-exit-active {
   opacity: 0;
 
-  transition: opacity 300ms ease-out, transform 200ms ease;
+  /* transition: opacity 300ms ease-out, transform 200ms ease; */
 }

@@ -109,9 +109,21 @@ const InputAddress = (props) => {
 
 
             <div>
-                <Input nameid="address1" type="text" labelName="都道府県" handler={(e) => { addressChangeHandler(1, e.target.value) }} val={address.address1} />
+                <div className=" mb-4">
+                    <label htmlFor="address1">address1</label>
+                    <input onChange={(e) => { addressChangeHandler(1, e.target.value) }} type="text" value={address.address1} className='w-full block border border-neutral-500 rounded-sm bg-slate-50 p-1' id="address1" name="address1" />
+                </div>
+                <div className=" mb-4">
+                    <label htmlFor="address2">address2</label>
+                    <input onChange={(e) => { addressChangeHandler(2, e.target.value) }} type="text" value={address.address2} className='w-full block border border-neutral-500 rounded-sm bg-slate-50 p-1' id="address2" name="address2" />
+                </div>
+                <div className=" mb-4">
+                    <label htmlFor="address3">address3</label>
+                    <input onChange={(e) => { addressChangeHandler(3, e.target.value) }} type="text" value={address.address3} className='w-full block border border-neutral-500 rounded-sm bg-slate-50 p-1' id="address3" name="address3" />
+                </div>
+                {/* <Input nameid="address1" type="text" labelName="都道府県" handler={(e) => { addressChangeHandler(1, e.target.value) }} val={address.address1} />
                 <Input nameid="address2" type="text" labelName="市区町村" handler={(e) => { addressChangeHandler(2, e.target.value) }} val={address.address2} />
-                <Input nameid="address3" type="text" labelName="町域" handler={(e) => { addressChangeHandler(3, e.target.value) }} val={address.address3} />
+                <Input nameid="address3" type="text" labelName="町域" handler={(e) => { addressChangeHandler(3, e.target.value) }} val={address.address3} /> */}
 
             </div>
 

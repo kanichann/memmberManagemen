@@ -30,7 +30,10 @@ const Notification = (props) => {
                         })}
 
                     </dl>
-                    {notificationdata && <NotificationDetail delete={() => { setNotificationdata(null) }} data={notificationdata} />}
+                    <Modal show={notificationdata} delete={() => { setNotificationdata((val) => !val) }}>
+                        <NotificationDetail delete={() => { setNotificationdata((val) => !val) }} data={notificationdata} />
+                    </Modal>
+                    {/* {notificationdata && <NotificationDetail delete={() => { setNotificationdata(null) }} data={notificationdata} />} */}
                 </Box>
             </div>
         </article>

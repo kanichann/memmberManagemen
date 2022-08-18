@@ -1,4 +1,4 @@
-import React, { useContext, useState, useReducer } from 'react';
+import React, { useContext, useState, useReducer, useCallback } from 'react';
 import Input from './UI/input'
 import Modal from './UI/modal'
 import SelectInput from './UI/selectInput';
@@ -8,66 +8,106 @@ import axios from 'axios';
 import { UserContext } from "../context/user-context";
 import { CalenderContext } from '../context/calender-context';
 
-const reducer = (state, action) => {
-
+const inputReducer = (state, action) => {
     switch (action.type) {
-        case 'scheduleDetail':
-            return { ...state, scheduleDetail: action.payload }
-        case 'schedule':
-            return { ...state, schedule: action.payload }
-        case 'type':
-            return { ...state, type: action.payload }
-        case 'startTime':
-            return { ...state, startTime: action.payload }
-        case 'endTime':
-            return { ...state, endTime: action.payload }
-        case 'memberOpen':
-            return { ...state, memberOpen: !state.memberOpen }
-        case 'err':
-            return { ...state, err: action.payload }
+        case 'change':
+            let formIsValid = true;
+            for (const inputId in state.inputs) {
+                if (inputId === action.inputId) {
+                    formIsValid = formIsValid && action.isValid
+                }
+                else {
+                    formIsValid = formIsValid && state.inputs[inputId].isValid
+                }
+            }
 
+            return {
+                ...state,
+                inputs: {
+                    ...state.inputs,
+                    [action.inputId]: { value: action.val, isValid: action.isValid },
+                },
+                isValid: formIsValid
+            };
+        case 'err':
+            return {
+                ...state,
+                err: action.val
+            }
         default:
-            return state
+            return state;
     }
 }
+
 
 const hours = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
 const minutes = ["00", "15", "30", "45"]
 
 const ScheduleDetailInsert = (props) => {
 
-    const initialState = {
-        schedule: props.schedule.schedule,
-        scheduleDetail: props.schedule.schedule_detail,
-        type: props.schedule.schedule_type,
-        startTime: props.schedule.schedule_start,
-        endTime: props.schedule.schedule_end,
-        err: '',
-        memberOpen: props.schedule.memberopen === 1 ? true : false
-    }
-    const [state, dispatch] = useReducer(reducer, initialState);
+
+
+
+    const [ScheduleState, dispatch] = useReducer(inputReducer,
+        {
+            inputs: {
+                schedule: {
+                    value: props.schedule.schedule,
+                    isValid: false
+                },
+                scheduleDetail: {
+                    value: props.schedule.schedule_detail,
+                    isValid: false
+                },
+                type: {
+                    value: props.schedule.schedule_type,
+                    isValid: false
+                },
+                startTime: {
+                    value: props.schedule.schedule_start,
+                    isValid: false
+                },
+                endTime: {
+                    value: props.schedule.schedule_end,
+                    isValid: false,
+                },
+                memberOpen: {
+                    value: false,
+                    isValid: true
+                }
+
+            },
+            err: '',
+            isValid: false
+        }
+    )
+    console.log(props, 'proprpro', ScheduleState)
+    const inputHandler = useCallback((inputId, val, isValid) => {
+        console.log(val);
+        return dispatch({ inputId: inputId, type: 'change', val: val, isValid: isValid })
+    }, [])
+
+
     const [change, setChange] = useState(false);
     const userCtx = useContext(UserContext);
     const calenderCtx = useContext(CalenderContext)
-    const closeModal = (event) => {
-        props.delete()
-    }
-
 
     async function submitHandler(event) {
+        console.log(ScheduleState.inputs.schedule.value, 'taktokaktokatoo');
         event.preventDefault();
         dispatch({
             type: "err",
-            payload: '',
+            value: '',
         });
         let data = new URLSearchParams();
-        let { schedule, scheduleDetail, type, startTime, endTime } = state;
-        data.append("schedule", schedule);
-        data.append("scheduleDetail", scheduleDetail);
-        data.append("type", +type);
-        data.append("startTime", startTime);
-        data.append("endTime", endTime);
+
+        data.append("schedule", ScheduleState.inputs.schedule.value);
+        data.append("scheduleDetail", ScheduleState.inputs.scheduleDetail.value);
+        data.append("type", +ScheduleState.inputs.type.value);
+        data.append("startTime", ScheduleState.inputs.startTime.value);
+        data.append("endTime", ScheduleState.inputs.endTime.value);
         data.append("date", +props.scheduleDataNum);
+        data.append("memberOpen", ScheduleState.inputs.memberOpen.value);
         data.append("id", +props.schedule.id);
         await axios({
             method: 'POST',
@@ -80,146 +120,83 @@ const ScheduleDetailInsert = (props) => {
             calenderCtx.setScheduleData(res.data);
             props.delete();
         }).catch(err => {
-            console.log(err); dispatch({ type: 'err', payload: err.response.data.msg })
+            console.log(err); dispatch({ type: 'err', value: err.response.data.msg })
         })
     }
 
-
-    // async function submitHandler(event) {
-    //     event.preventDefault();
-    //     dispatch({
-    //         type: "err",
-    //         payload: '',
-    //     });
-    //     let data = new URLSearchParams();
-    //     let { schedule, scheduleDetail, type, startTime, endTime } = state;
-    //     data.append("schedule", schedule);
-    //     data.append("scheduleDetail", scheduleDetail);
-    //     data.append("type", +type);
-    //     data.append("startTime", startTime);
-    //     data.append("endTime", endTime);
-    //     data.append("date", +props.scheduleDataNum);
-    //     await axios({
-    //         method: 'POST',
-    //         url: "http://localhost:3002/schedule/set",
-    //         headers:
-    //             { Authorization: "Bearer " + userCtx.token },
-    //         data: data
-    //     }).then(res => {
-    //         console.log(res.data, 'schedule更新');
-    //         calenderCtx.setScheduleData(res.data);
-    //         props.delete();
-    //     }).catch(err => {
-    //         console.log(err); dispatch({ type: 'err', payload: err.response.data.msg })
-    //     })
-    // }
-    console.log(userCtx.admin);
-    console.log(userCtx.admin === 1, props.schedule.memberopen, 'takotkao')
-
     return (
-            <dl className='p-16'>
-                <dt>
-                    {props.scheduleDate}
-                </dt>
-                {!change && <><dd>
-                    <dl>
-                        <dt>予定</dt>
-                        <dd>{props.schedule.schedule}</dd>
-                        <dt>タイプ</dt>
-                        <dd>{props.schedule.schedule_type}</dd>
-                        <dt>予定時間</dt>
-                        <dd>{props.schedule.schedule_start}~{props.schedule.schedule_end}</dd>
-                        <dt>予定詳細</dt>
-                        <dd>{props.schedule.schedule_detail}</dd>
-                        {userCtx.admin && (props.schedule.memberopen === 1) ? <dt>会員に共有しています</dt> : <dt>会員に共有していません</dt>}
-                    </dl>
-                </dd>
+        <dl className='p-16'>
+            <dt>
+                {props.scheduleDate}
+            </dt>
+            {!change && <><dd>
+                <dl>
+                    <dt>予定</dt>
+                    <dd>{props.schedule.schedule}</dd>
+                    <dt>タイプ</dt>
+                    <dd>{props.schedule.schedule_type}</dd>
+                    <dt>予定時間</dt>
+                    <dd>{props.schedule.schedule_start}~{props.schedule.schedule_end}</dd>
+                    <dt>予定詳細</dt>
+                    <dd>{props.schedule.schedule_detail}</dd>
+                    {userCtx.admin && (props.schedule.memberopen === 1) ? <dt>会員に共有しています</dt> : <dt>会員に共有していません</dt>}
+                </dl>
+            </dd>
 
-                    <button className='btn mt-2' onClick={() => { setChange(true) }}>修正</button></>
+                <button className='btn mt-2' onClick={() => { setChange(true) }}>修正</button></>
+            }
+
+
+
+
+            {change && <form onSubmit={submitHandler}>
+                {/* 予定名　予定詳細　タイプ　開始時間　終了時間 */}
+                <Input name="schedule" val={ScheduleState.inputs.schedule.value} type="text" labelName="予定" handler={inputHandler} />
+                <Input type="select" name="type" val={ScheduleState.inputs.type.value} labelName="タイプ" handler={inputHandler}>
+                    <option value="0">
+                        なし
+                    </option>
+                    <option value="1">
+                        重要
+                    </option>
+                    <option value="2">
+                        締切
+                    </option>
+                </Input>
+                <Input type="select" name="startTime" val={ScheduleState.inputs.startTime.value} labelName="開始時間" handler={inputHandler}>
+                    <option value="">-</option>
+                    {hours.map((hour) => {
+                        return minutes.map((minute) => {
+                            return (<option key={`${hour}:${minute}`} value={`${hour}:${minute}`}>{`${hour}:${minute}`}</option>)
+                        })
+                    })}
+
+
+                </Input>
+                <Input type="select" name="endTime" val={ScheduleState.inputs.endTime.value} labelName="終了時間" handler={inputHandler}>
+                    <option value="">-</option>
+                    {hours.map((hour) => {
+                        return minutes.map((minute) => {
+                            return (<option key={`${hour}:${minute}`} value={`${hour}:${minute}`}>{`${hour}:${minute}`}</option>)
+                        })
+                    })}
+
+
+                </Input>
+                <Input type="textarea" name="scheduleDetail" val={ScheduleState.inputs.scheduleDetail.value} labelName="予定詳細" handler={inputHandler} />
+                {userCtx.admin &&
+                    <Input type="check" name="memberOpen" val={ScheduleState.inputs.memberOpen.value} handler={inputHandler} labelName="会員に公開する。" />
                 }
+                <button className='btn mt-2'>登録</button>
+                {ScheduleState.err && <p className="mt-6 text-red-400">{ScheduleState.err}</p>}
 
 
+            </form>}
+
+            {/* {state.err && <p className="mt-6 text-red-400">{state.err}</p>} */}
 
 
-                {change && <form onSubmit={submitHandler}>
-                    {/* 予定名　予定詳細　タイプ　開始時間　終了時間 */}
-                    <Input nameid="schedule" val={state.schedule} type="text" labelName="予定" handler={(e) => {
-
-                        dispatch({
-                            type: "schedule",
-                            payload: e.target.value
-                        });
-                    }} />
-                    <SelectInput nameid="type" val={state.type} labelName="タイプ" handler={(e) => {
-                        dispatch({
-                            type: "type",
-                            payload: e.target.value
-                        });
-                    }}>
-                        <option value="0">
-                            なし
-                        </option>
-                        <option value="1">
-                            重要
-                        </option>
-                        <option value="2">
-                            締切
-                        </option>
-                    </SelectInput>
-                    <SelectInput nameid="startTime" val={state.startTime} labelName="開始時間" handler={(e) => {
-                        dispatch({
-                            type: "startTime",
-                            payload: e.target.value
-                        });
-                    }}>
-                        <option value="">-</option>
-                        {hours.map((hour) => {
-                            return minutes.map((minute) => {
-                                return (<option key={`${hour}:${minute}`} value={`${hour}:${minute}`}>{`${hour}:${minute}`}</option>)
-                            })
-                        })}
-
-
-                    </SelectInput>
-                    <SelectInput nameid="endTime" val={state.endTime} labelName="終了時間" handler={(e) => {
-                        dispatch({
-                            type: "endTime",
-                            payload: e.target.value
-                        });
-                    }}>
-                        <option value="">-</option>
-                        {hours.map((hour) => {
-                            return minutes.map((minute) => {
-                                return (<option key={`${hour}:${minute}`} value={`${hour}:${minute}`}>{`${hour}:${minute}`}</option>)
-                            })
-                        })}
-
-
-                    </SelectInput>
-                    <TextInput nameid="scheduleDetail" val={state.scheduleDetail} type="scheduleDetail" labelName="予定詳細" handler={(e) => {
-                        dispatch({
-                            type: "scheduleDetail",
-                            payload: e.target.value
-                        });
-                    }} />
-                    {userCtx.admin &&
-                        <CheckInput name="memberOpen" val={state.memberOpen} handler={(e) => {
-                            dispatch({
-                                type: "memberOpen"
-                            });
-                        }}>member全体に公開する</CheckInput>
-                    }
-                    <button className='btn mt-2'>登録</button>
-                    {state.err && <p className="mt-6 text-red-400">{state.err}</p>}
-
-                    <button className='btn mt-2'>登録</button>
-                    {state.err && <p className="mt-6 text-red-400">{state.err}</p>}
-                </form>}
-
-                {/* {state.err && <p className="mt-6 text-red-400">{state.err}</p>} */}
-
-
-            </dl>
+        </dl>
     )
 }
 

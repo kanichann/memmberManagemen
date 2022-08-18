@@ -1,20 +1,76 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useReducer, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router';
 import Box from '../components/UI/box';
 import { UserContext } from '../context/user-context';
 import { Link } from 'react-router-dom';
 import Input from '../components/UI/input'
+import Button from '../components/UI/button'
+import { VALIDATOR_EMAIL, VALIDATOR_REQUIRE } from '../util/validate';
 
+const inputReducer = (state, action) => {
+    switch (action.type) {
+        case 'change':
+            let formIsValid = true;
+            for (const inputId in state.inputs) {
+                if (inputId === action.inputId) {
+                    formIsValid = formIsValid && action.isValid
+                }
+                else {
+                    formIsValid = formIsValid && state.inputs[inputId].isValid
+                }
+            }
+            return {
+                ...state,
+                inputs: {
+                    ...state.inputs,
+                    [action.inputId]: { value: action.val, isValid: action.isValid },
+                },
+                isValid: formIsValid
+            };
+        case 'err':
+            return {
+                ...state,
+                err: action.val
+            }
+        default:
+            return state;
+    }
+}
 const Login = () => {
+    const [LoginState, dispatch] = useReducer(inputReducer,
+        {
+            inputs: {
+                pass: {
+                    value: '',
+                    isValid: false
+                },
+                email: {
+                    value: '',
+                    isValid: false
+                }
+
+            },
+            err: '',
+            isValid: false
+        }
+    )
+    // const inputHandler = () => { };
+    const inputHandler = useCallback((inputId, val, isValid) => {
+        console.log(inputId);
+        return dispatch({ inputId: inputId, type: 'change', val: val, isValid: isValid })
+    }, [])
+
+
     const userCtx = useContext(UserContext)
     const navigate = useNavigate()
     async function loginHandler(event) {
         event.preventDefault();
-        errHandler('');
+        dispatch({ type: 'err', val: '' });
         let data = new URLSearchParams();
-        data.append("email", email);
-        data.append("pass", pass);
+        console.log(LoginState);
+        data.append("email", LoginState.inputs.email.value);
+        data.append("pass", LoginState.inputs.pass.value);
         console.log('send');
         await axios({
             method: 'POST',
@@ -32,16 +88,16 @@ const Login = () => {
             } else {
                 navigate('/');
             }
-        }).catch(err => { console.log(err); errHandler(err.response.data.msg) })
+        }).catch(err => { console.log(err); dispatch({ type: 'err', val: err.response.data.msg }) })
 
     }
 
 
     // メンバー内になければアドミン枠を検索しにいきそちらにあればアドミン画面へ遷移
 
-    const [pass, passHandler] = useState('');
-    const [email, emailHandler] = useState('');
-    const [err, errHandler] = useState('');
+    // const [pass, passHandler] = useState('');
+    // const [email, emailHandler] = useState('');
+    // const [err, errHandler] = useState('');
 
 
     return (
@@ -50,18 +106,12 @@ const Login = () => {
                 <Box>
                     <h1 className="ttl-1">ログイン</h1>
                     <form onSubmit={loginHandler} className='mb-2 gap-y-16'>
-                        <Input nameid="mail" val={email} type="email" labelName="メールアドレス" handler={(e) => { emailHandler(e.target.value) }} />
-                        {/* <div>
-                            <label htmlFor="mail">E-Mail</label>
-                            <input onChange={(e) => { console.log('change2'); emailHandler(e.target.value) }} type="email" value={email} className='w-full block border border-neutral-600 p-1' id='mail' name='mail' />
-                        </div> */}
-                        <Input nameid="pass" val={pass} type="password" labelName="パスワード" handler={(e) => { passHandler(e.target.value) }} />
-                        {/* <div className='mb-4'>
-                            <label htmlFor="pass">PASSWORD</label>
-                            <input onChange={(e) => { console.log('change'); passHandler(e.target.value) }} type="password" value={pass} className='w-full block border border-neutral-600 p-1' id='pass' name='pass' />
-                        </div> */}
-                        {err && <p className="mt-6 text-red-400">{err}</p>}
-                        <button className='btn mt-2'>ログイン</button>
+                        <Input name="email" validate={[VALIDATOR_REQUIRE()]} type="email" labelName="メールアドレス" handler={inputHandler} />
+
+                        <Input name="pass" validate={[VALIDATOR_REQUIRE()]} type="password" labelName="パスワード" handler={inputHandler} />
+
+                        {LoginState.err && <p className="mt-6 text-red-400">{LoginState.err}</p>}
+                        <Button style="mb-4" type="submit">ログイン</Button>
                     </form>
                     <div className='text-right'>
                         <Link to={'/register'}>新規登録はこちら</Link>
