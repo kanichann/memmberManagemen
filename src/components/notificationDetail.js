@@ -1,10 +1,10 @@
 import react, { useContext } from 'react';
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+
 import { NotificationContext } from "../context/notification-context";
 import Modal from './UI/modal';
 import CheckInput from './UI/checkInput';
 import { UserContext } from '../context/user-context';
+import useReqestClient from '../hooks/requset-hook'
 import axios from 'axios';
 const NotificationDetail = (props) => {
     const NotificationCtx = useContext(NotificationContext);
@@ -12,19 +12,16 @@ const NotificationDetail = (props) => {
     const closeModal = () => {
         props.delete();
     }
+    const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
 
 
     const confirmHandler = async (notificationId) => {
         props.delete();
         let data = new URLSearchParams();
         data.append("id", notificationId);
-        await axios({
-            method: 'post',
-            url: "http://localhost:3002/notification/read",
-            headers:
-                { Authorization: "Bearer " + userCtx.token },
-            data: data
-        }).then(res => {
+        await requestHandler('post', "http://localhost:3002/notification/read", data,
+            { Authorization: "Bearer " + userCtx.token },
+        ).then(res => {
             props.delete();
             NotificationCtx.setdata((arr) => {
                 return arr.filter(val => {
@@ -51,6 +48,7 @@ const NotificationDetail = (props) => {
                     {props.read &&
                         <button className='btn' onClick={() => { confirmHandler(props.data.id) }}>確認しました</button>
                     }
+
                 </dd>
             </dl>
         </>

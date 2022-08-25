@@ -13,7 +13,6 @@ const CalendarCell = (props) => {
     const scheduleBox_glay = "block text-left w-full shadow-sm text-xs border border-gray-200 bg-gray-50 overflow-hidden px-1"
     const scheduleBox_red = "block text-left w-full shadow-sm text-xs border border-gray-200 bg-red-100 overflow-hidden px-1"
     const scheduleBox_green = "block text-left w-full shadow-sm text-xs border border-gray-200 bg-green-100 overflow-hidden px-1"
-    console.log(detailShow, '4444444')
     return (
         <>
             <td className={props.highLight && "bg-amber-300"}>

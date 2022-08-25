@@ -7,6 +7,7 @@ import CheckInput from './UI/checkInput';
 import axios from 'axios';
 import { UserContext } from "../context/user-context";
 import { CalenderContext } from '../context/calender-context';
+import useReqestClient from '../hooks/requset-hook'
 
 const inputReducer = (state, action) => {
     switch (action.type) {
@@ -86,6 +87,7 @@ const ScheduleDetailInsert = (props) => {
         console.log(val);
         return dispatch({ inputId: inputId, type: 'change', val: val, isValid: isValid })
     }, [])
+    const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
 
 
     const [change, setChange] = useState(false);
@@ -93,12 +95,8 @@ const ScheduleDetailInsert = (props) => {
     const calenderCtx = useContext(CalenderContext)
 
     async function submitHandler(event) {
-        console.log(ScheduleState.inputs.schedule.value, 'taktokaktokatoo');
         event.preventDefault();
-        dispatch({
-            type: "err",
-            value: '',
-        });
+
         let data = new URLSearchParams();
 
         data.append("schedule", ScheduleState.inputs.schedule.value);
@@ -109,19 +107,14 @@ const ScheduleDetailInsert = (props) => {
         data.append("date", +props.scheduleDataNum);
         data.append("memberOpen", ScheduleState.inputs.memberOpen.value);
         data.append("id", +props.schedule.id);
-        await axios({
-            method: 'POST',
-            url: "http://localhost:3002/schedule/update",
-            headers:
-                { Authorization: "Bearer " + userCtx.token },
-            data: data
-        }).then(res => {
+        await requestHandler('POST', "http://localhost:3002/schedule/update", data,
+            { Authorization: "Bearer " + userCtx.token }).then(res => {
 
-            calenderCtx.setScheduleData(res.data);
-            props.delete();
-        }).catch(err => {
-            console.log(err); dispatch({ type: 'err', value: err.response.data.msg })
-        })
+                calenderCtx.setScheduleData(res);
+                props.delete();
+            }).catch(err => {
+                console.log(err)
+            })
     }
 
     return (

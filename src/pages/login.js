@@ -7,8 +7,11 @@ import { Link } from 'react-router-dom';
 import Input from '../components/UI/input'
 import Button from '../components/UI/button'
 import { VALIDATOR_EMAIL, VALIDATOR_REQUIRE } from '../util/validate';
+import useReqestClient from '../hooks/requset-hook'
+import Loading from '../components/UI/loading';
 
 const inputReducer = (state, action) => {
+
     switch (action.type) {
         case 'change':
             let formIsValid = true;
@@ -55,6 +58,7 @@ const Login = () => {
             isValid: false
         }
     )
+    const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
     // const inputHandler = () => { };
     const inputHandler = useCallback((inputId, val, isValid) => {
         console.log(inputId);
@@ -71,24 +75,24 @@ const Login = () => {
         console.log(LoginState);
         data.append("email", LoginState.inputs.email.value);
         data.append("pass", LoginState.inputs.pass.value);
-        console.log('send');
-        await axios({
-            method: 'POST',
-            url: "http://localhost:3002/login",
-            data: data
-        }).then(res => {
-            console.log(res);
-            localStorage.setItem('token', res.data.token);
-            userCtx.setToken(res.data.token);
-            console.log(res.data.admin);
-            if (res.data.admin === 1) {
-                localStorage.setItem('admin', 1);
-                userCtx.setAdmin(1);
-                navigate('/admin')
-            } else {
-                navigate('/');
-            }
-        }).catch(err => { console.log(err); dispatch({ type: 'err', val: err.response.data.msg }) })
+        // await axios({
+        //     method: 'POST',
+        //     url: "http://localhost:3002/login",
+        //     data: data
+        await requestHandler('POST', "http://localhost:3002/login", data)
+            .then(res => {
+                console.log(res);
+                localStorage.setItem('token', res.token);
+                userCtx.setToken(res.token);
+                console.log(res.admin);
+                if (res.admin === 1) {
+                    localStorage.setItem('admin', 1);
+                    userCtx.setAdmin(1);
+                    navigate('/admin')
+                } else {
+                    navigate('/');
+                }
+            }).catch(err => { console.log(err); })
 
     }
 
@@ -110,9 +114,10 @@ const Login = () => {
 
                         <Input name="pass" validate={[VALIDATOR_REQUIRE()]} type="password" labelName="パスワード" handler={inputHandler} />
 
-                        {LoginState.err && <p className="mt-6 text-red-400">{LoginState.err}</p>}
+                        <RequestErr />
                         <Button style="mb-4" type="submit">ログイン</Button>
                     </form>
+                    <RequestLoading />
                     <div className='text-right'>
                         <Link to={'/register'}>新規登録はこちら</Link>
                     </div>

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { UserContext } from '../context/user-context';
 import Input from '../components/UI/input';
 import InputAddress from '../components/UI/input_address';
+import useReqestClient from '../hooks/requset-hook'
 
 const inputReducer = (state, action) => {
     switch (action.type) {
@@ -28,11 +29,7 @@ const inputReducer = (state, action) => {
                 },
                 isValid: formIsValid
             };
-        case 'err':
-            return {
-                ...state,
-                err: action.val
-            }
+
         default:
             return state;
     }
@@ -62,18 +59,11 @@ const Register = () => {
             },
 
         },
-        err: '',
-        isValid: false
     })
-    // const [name, setName] = useState('');
-    // const [pass, setPass] = useState('');
-    // const [email, setEmail] = useState('');
-    // const [birth, setBirth] = useState('');
-    // const [err, setErr] = useState('');
+    const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
     const [address, addressHandler] = useState({});
     async function submitHandler(event) {
         event.preventDefault();
-        dispatch({ type: 'err', val: '' })
         // setErr('');
         let data = new URLSearchParams();
         data.append("name", registerState.inputs.name.value);
@@ -82,21 +72,22 @@ const Register = () => {
         data.append("birth", registerState.inputs.birth.value)
         data.append("address", address.zipcode + address.address1 + address.address2 + address.address3);
 
-        const res = await axios({
-            method: 'POST',
-            url: "http://localhost:3002/register",
-            data: data
-        }).catch((err) => { console.log(err.response.data.msg); dispatch({ type: 'err', val: err.response.data.msg || "登録に失敗しました" }); })
+        const res = await requestHandler(
+            'POST', "http://localhost:3002/register", data
+        )
+            .catch((err) => {
+                console.log("登録に失敗しました");
+            })
         // let resData = JSON.parse(res);
         // console.log(resData);
-        if (res.data) {
-            localStorage.setItem('token', res.data.token);
-            await userCtx.setToken(res.data.token);
+        if (res) {
+            localStorage.setItem('token', res.token);
+            await userCtx.setToken(res.token);
             console.log('成功')
-            if (res.data.admin === 0) {
+            if (res.admin === 0) {
                 navigate('/');
             }
-            if (res.data.admin === 1) {
+            if (res.admin === 1) {
                 navigate('/admin')
             }
         }
@@ -130,7 +121,9 @@ const Register = () => {
                         <InputAddress addressHandler={(e) => { addressHandler(e) }} />
 
                         <button className='btn'>新規登録</button>
-                        {registerState.err && <p className=' text-red-600'>{registerState.err}</p>}
+
+                        <RequestLoading />
+                        <RequestErr />
                     </form>
                     <div className='text-right'>
                         <Link to={'/login'}>ログインはこちら</Link>

@@ -12,6 +12,7 @@ import SelectInput from '../components/UI/selectInput';
 import TextInput from '../components/UI/textInput';
 import FileInput from '../components/UI/fileInput';
 import axios from 'axios';
+import useReqestClient from '../hooks/requset-hook'
 
 const inputReducer = (state, action) => {
     switch (action.type) {
@@ -88,6 +89,7 @@ const inputReducer = (state, action) => {
 
 const NotificationSubmit = () => {
     const userCtx = useContext(UserContext);
+    const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
     const [noatificationState, dispatch] = useReducer(inputReducer, {
         inputs: {
             title: {
@@ -137,33 +139,22 @@ const NotificationSubmit = () => {
         })
         const data = new FormData()
 
-        data.set("title", noatificationState.inputs.title.value);
-        data.set("contents", noatificationState.inputs.contents.value);
+        data.append("title", noatificationState.inputs.title.value);
+        data.append("contents", noatificationState.inputs.contents.value);
         data.append("type", +noatificationState.inputs.type.value);
         data.append("file", noatificationState.inputs.pdf.value);
         data.append("pdfname", noatificationState.inputs.pdfname.value);
 
 
-        await axios.post('http://localhost:3002/notification/set', data, {
-            headers: {
-                Authorization: "Bearer " + userCtx.token,
-                'content-type': 'multipart/form-data',
-            }
-        }).then(res => {
-            console.log(res.data, 'schedule更新');
-            dispatch({
-                type: 'loading',
-                val: false
-            })
+        await requestHandler('POST', 'http://localhost:3002/notification/set', data, {
+            Authorization: "Bearer " + userCtx.token,
+            'content-type': 'multipart/form-data',
+        }
+        ).then(res => {
+            console.log(res, 'schedule更新');
+            dispatch({ type: 'end', val: true })
         }).catch(err => {
             console.log(err);
-            dispatch({
-                type: 'loading',
-                val: false
-            })
-            dispatch({
-                type: 'err', val: err.response.data.msg
-            });
 
         })
     }
@@ -196,9 +187,10 @@ const NotificationSubmit = () => {
 
 
                         <button className='btn mt-2'>送信</button>
-                        {noatificationState.loading && <Loading />}
+                        <RequestLoading />
+                        <RequestErr />
                         {noatificationState.end && <p>通知を送信いたしました。</p>}
-                        {noatificationState.err && <p className="mt-6 text-red-400">{noatificationState.err}</p>}
+
 
                     </form>
                 </Box>

@@ -4,6 +4,7 @@ import Modal from './UI/modal'
 import SelectInput from './UI/selectInput';
 import TextInput from './UI/textInput';
 import CheckInput from './UI/checkInput';
+import useReqestClient from '../hooks/requset-hook'
 import axios from 'axios';
 import { UserContext } from "../context/user-context";
 import { CalenderContext } from '../context/calender-context';
@@ -76,7 +77,7 @@ const minutes = ["00", "15", "30", "45"]
 const ScheduleDetailInsert = (props) => {
     const userCtx = useContext(UserContext);
     const calenderCtx = useContext(CalenderContext)
-
+    const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
     // const [state, dispatch] = useReducer(reducer, initialState);
 
 
@@ -138,17 +139,17 @@ const ScheduleDetailInsert = (props) => {
         data.append("endTime", ScheduleState.inputs.endTime.value);
         data.append("date", +props.scheduleDataNum);
         data.append("memberOpen", ScheduleState.inputs.memberOpen.value);
-        await axios({
-            method: 'POST',
-            url: "http://localhost:3002/schedule/set",
-            headers:
-                { Authorization: "Bearer " + userCtx.token },
-            data: data
-        }).then(res => {
-            calenderCtx.setScheduleData(res.data);
+        await requestHandler(
+            'POST',
+            "http://localhost:3002/schedule/set",
+            data,
+            { Authorization: "Bearer " + userCtx.token },
+
+        ).then(res => {
+            calenderCtx.setScheduleData(res);
             props.delete();
         }).catch(err => {
-            console.log(err); dispatch({ type: 'err', value: err.response.data.msg })
+            console.log(err);
         })
     }
 
@@ -199,7 +200,7 @@ const ScheduleDetailInsert = (props) => {
                         <Input name="memberOpen" type="check" val={ScheduleState.inputs.memberOpen.value} labelName="member全体に公開する" handler={inputHandler} />
                     }
                     <button className='btn mt-2'>登録</button>
-                    {ScheduleState.err && <p className="mt-6 text-red-400">{ScheduleState.err}</p>}
+                    <RequestLoading /> <RequestErr />
 
                 </form>
 
