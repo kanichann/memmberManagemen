@@ -60,7 +60,7 @@ function App() {
             }
 
 
-            {userCtx.token && (<>
+            {userCtx.token && userCtx.admin !== null && (<>
 
               <Route path='/notificationSubmit' element={<NotificationSubmit />} />
               <Route path='/notificationAll' element={<NotificationAll />} />
@@ -68,7 +68,7 @@ function App() {
             </>
             )
             }
-            {userCtx.token && !userCtx.admin && (<>
+            {userCtx.token && userCtx.admin !== null && userCtx.admin && (<>
               <Route path='/' element={<Member />} />
               <Route path='/personal_info' element={<PersonalInfo />} />
               <Route path='/change_profile' element={<ChangeProfile />} />
@@ -76,7 +76,7 @@ function App() {
             </>
             )
             }
-            {userCtx.token && userCtx.admin && (<>
+            {userCtx.token && userCtx.admin !== null && userCtx.admin && (<>
               <Route path='/admin' element={<Admin />} />
               <Route path='*' element={<Navigate to="/admin" />} />
             </>

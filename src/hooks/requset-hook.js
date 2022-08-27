@@ -35,12 +35,10 @@ const useReqestClient = () => {
             headers: headers
         }).then((res) => {
             dispatch({ type: "loading", value: false });
-            console.log(res.data);
             response = res.data
             // dispatch({ type: 'res', value: res.data });
         }
         ).catch((err) => {
-            console.log(err, 'errrrrrr');
             dispatch({ type: "loading", value: false })
             dispatch({ type: "err", value: err.response.data.msg || "エラーが発生しました。" });
             throw err
@@ -54,7 +52,6 @@ const useReqestClient = () => {
     }
     const RequestLoading = () => requestState.loading && <Loading />;
     const RequestErr = () => {
-        console.log(requestState.err)
         return requestState.err && <p className="mt-6 text-red-400">{requestState.err}</p>
     }
 

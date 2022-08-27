@@ -61,7 +61,6 @@ const Login = () => {
     const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
     // const inputHandler = () => { };
     const inputHandler = useCallback((inputId, val, isValid) => {
-        console.log(inputId);
         return dispatch({ inputId: inputId, type: 'change', val: val, isValid: isValid })
     }, [])
 
@@ -72,22 +71,16 @@ const Login = () => {
         event.preventDefault();
         dispatch({ type: 'err', val: '' });
         let data = new URLSearchParams();
-        console.log(LoginState);
         data.append("email", LoginState.inputs.email.value);
         data.append("pass", LoginState.inputs.pass.value);
-        // await axios({
-        //     method: 'POST',
-        //     url: "http://localhost:3002/login",
-        //     data: data
         await requestHandler('POST', "http://localhost:3002/login", data)
             .then(res => {
+
+                return userCtx.login(res);
+            }).then(res => {
                 console.log(res);
-                localStorage.setItem('token', res.token);
-                userCtx.setToken(res.token);
-                console.log(res.admin);
-                if (res.admin === 1) {
-                    localStorage.setItem('admin', 1);
-                    userCtx.setAdmin(1);
+                if (res === 1) {
+                    console.log("resres", res === 1);
                     navigate('/admin')
                 } else {
                     navigate('/');

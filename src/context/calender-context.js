@@ -19,27 +19,18 @@ const CalenderProvider = (props) => {
     const [scheduleData, setScheduleData] = useState('');
     useEffect(() => {
         if (token) {
-            console.log('useContext', "Bearer " + token)
             axios.get("http://localhost:3002/schedule",
                 {
                     headers:
                         { Authorization: "Bearer " + token },
                 }
-                // axios.get("http://localhost:3002/memberinfo",
-                //     {
-                //         headers:
-                //             { Authorization: "Bearer " + token },
-                //     }
+
             ).then((res) => {
-                // setName(res.data.name);
                 console.log('hello');
                 console.log(res);
                 setScheduleData(res.data);
             }).catch((err) => {
                 console.log('fetchErr', err);
-                // setError(err);
-                // localStorage.removeItem('token');
-                // setToken(null);
             })
 
         }

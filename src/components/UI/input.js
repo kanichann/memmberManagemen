@@ -15,7 +15,6 @@ const reducer = (state, action) => {
                 errMessage = validateResult.errMessage;
 
             };
-            console.log(isvalid, errMessage);
             // action.propsFunction(action.nameId, action.val, isvalid);
             return {
                 ...state,
@@ -30,7 +29,6 @@ const reducer = (state, action) => {
             };
 
         case 'registrationChange':
-            console.log(action.value, state.value, 'valval')
             return {
                 ...state,
                 value: action.value,
@@ -55,7 +53,6 @@ const Input = props => {
     //　以前の情報がある場合はprops.valに設定する
     useEffect(() => {
         if (props.val) {
-            console.log(props.val, 'takotaktotkoa')
             dispatch({
                 type: 'registrationChange',
                 value: props.val
