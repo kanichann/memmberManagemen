@@ -13,6 +13,9 @@ const Header = () => {
                         <Link to={'/'}>プロフィール</Link></li>
                     <li>
                         <Link to={'/personal_info'}>個人情報設定</Link></li>
+                    {userCtx.admin && <li>
+                        <Link to={'/MemberInfo/'}>会員情報</Link></li>}
+
                     <li><p onClick={userCtx.logout}>ログアウト</p></li>
                 </>}
             </ul>

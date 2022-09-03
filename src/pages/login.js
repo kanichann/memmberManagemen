@@ -69,7 +69,6 @@ const Login = () => {
     const navigate = useNavigate()
     async function loginHandler(event) {
         event.preventDefault();
-        dispatch({ type: 'err', val: '' });
         let data = new URLSearchParams();
         data.append("email", LoginState.inputs.email.value);
         data.append("pass", LoginState.inputs.pass.value);

@@ -14,3 +14,20 @@
 .btn {
   @apply px-4 py-2 text-neutral-700 bg-orange-300  rounded-sm border border-neutral-700;
 }
+.btn_list {
+  @apply pl-8 pr-4 py-2 mb-2 inline-block relative;
+}
+.btn_list::after {
+  @apply w-2 h-2 absolute top-1/2 right-0 inline-block border-t-2 border-stone-800 border-r-2 rotate-45 -translate-y-1/2;
+  content: "";
+}
+.btn_list_check::before {
+  @apply absolute left-0 text-2xl top-1/2 -translate-y-1/2 text-orange-500;
+  content: "\2713";
+}
+.btn_list_check {
+  @apply pointer-events-none;
+}
+.btn_list_check::after {
+  @apply hidden;
+}

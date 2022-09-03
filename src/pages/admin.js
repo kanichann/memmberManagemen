@@ -6,6 +6,7 @@ import { UserContext } from "../context/user-context";
 import CalenderProvider from '../context/calender-context'
 import Loading from "../components/UI/loading";
 import NotificationAdmin from '../components/notificationadmin'
+import Button from "../components/UI/button";
 const Admin = () => {
     const userCtx = useContext(UserContext);
 
@@ -24,10 +25,8 @@ const Admin = () => {
                 </div>
                 <section className="col-start-1 col-end-3">
                     <Box>
-                        <h2 className="ttl-2">重要なおしらせ</h2>
-                        <ul>
-                            <li>2021/05/31　年会費のお支払いは〇〇まででございます</li>
-                        </ul>
+                        <h2 className="ttl-2">会員情報一覧</h2>
+                        <Button to="/memberSummary">一覧を見る</Button>
                     </Box>
                 </section>
                 <section className="col-start-3 col-end-5">

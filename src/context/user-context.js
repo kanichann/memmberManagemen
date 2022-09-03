@@ -69,7 +69,7 @@ const UserProvider = (props) => {
     // }
     async function login(loginRes) {
         // const time = new Date().getTime() + 1000 * 60 * 60
-        const time = new Date().getTime() + 1000 * 60 * 60
+        const time = new Date().getTime() + 1000 * 60 * 600
         localStorage.setItem('token', loginRes.token);
         localStorage.setItem('time', time);
         setExpireTime(time)
@@ -79,6 +79,7 @@ const UserProvider = (props) => {
             localStorage.setItem('admin', 1);
             setAdmin(1);
         }
+        console.log(loginRes, loginRes.admin);
         return loginRes.admin
     }
     function logout() {

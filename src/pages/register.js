@@ -36,7 +36,7 @@ const inputReducer = (state, action) => {
 }
 
 const Register = () => {
-    let userCtx = useContext(UserContext)
+    const userCtx = useContext(UserContext);
     let navigate = useNavigate()
 
     const [registerState, dispatch] = useReducer(inputReducer, {
@@ -72,25 +72,45 @@ const Register = () => {
         data.append("birth", registerState.inputs.birth.value)
         data.append("address", address.zipcode + address.address1 + address.address2 + address.address3);
 
-        const res = await requestHandler(
+        await requestHandler(
             'POST', "http://localhost:3002/register", data
-        )
-            .catch((err) => {
-                console.log("登録に失敗しました");
-            })
-        // let resData = JSON.parse(res);
-        // console.log(resData);
-        if (res) {
-            localStorage.setItem('token', res.token);
-            await userCtx.setToken(res.token);
-            console.log('成功')
-            if (res.admin === 0) {
+        ).then((res) => {
+            if (res) {
+                // localStorage.setItem('token', res.token);
+                // localStorage.setItem('token', res.token);
+                // await userCtx.setToken(res.token);
+                console.log('成功', 'res', res)
+                return userCtx.login(res)
+            }
+        }).then(admin => {
+            console.log(admin)
+            if (admin === 0) {
                 navigate('/');
             }
-            if (res.admin === 1) {
+            if (admin === 1) {
                 navigate('/admin')
             }
-        }
+        })
+            .catch((err) => {
+                console.log("登録に失敗しました")
+            }
+            )
+        // let resData = JSON.parse(res);
+        // console.log(resData);
+        // if (res) {
+        //     // localStorage.setItem('token', res.token);
+        //     // localStorage.setItem('token', res.token);
+        //     // await userCtx.setToken(res.token);
+        //     console.log('成功', 'res', res)
+        //     const admin = await userCtx.login(res.token)
+        //     console.log(admin);
+        //     if (admin === 0) {
+        //         navigate('/');
+        //     }
+        //     if (admin === 1) {
+        //         navigate('/admin')
+        //     }
+        // }
         // if (!res.data) {
         //     dispatch({ type: 'err', val: true })
         // }

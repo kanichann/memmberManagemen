@@ -28,34 +28,7 @@ const NotificationProvider = (props) => {
     const [dataAll, setdataAll] = useState([]);
     const [notRead, setnotRead] = useState([]);
 
-    // const getNotification = () => {
-    //     if (token) {
-    //         const getUrl = admin ? "http://localhost:3002/notification/" : "http://localhost:3002/notification/read"
-    //         console.log(admin, "admin", getUrl);
-    //         axios.get(getUrl,
-    //             {
-    //                 headers:
-    //                     { Authorization: "Bearer " + token },
-    //             }
-    //             // axios.get("http://localhost:3002/memberinfo",
-    //             //     {
-    //             //         headers:
-    //             //             { Authorization: "Bearer " + token },
-    //             //     }
 
-    //         ).then((res) => {
-    //             // setName(res.data.name);
-    //             setdata(res.data);
-
-    //         }).catch((err) => {
-    //             console.log('fetchErr', err);
-    //             // setError(err);
-    //             // localStorage.removeItem('token');
-    //             // setToken(null);
-    //         })
-
-    //     }
-    // }
     useEffect(() => {
         if (token) {
             if (admin === "") return;

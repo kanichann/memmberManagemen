@@ -1,6 +1,8 @@
 import { useReducer, useCallback } from 'react';
 import axios from 'axios';
+import { UserContext } from "../context/user-context";
 import Loading from '../components/UI/loading';
+import { useContext } from 'react';
 
 const requestReducer = (state, action) => {
     switch (action.type) {
@@ -17,13 +19,16 @@ const requestReducer = (state, action) => {
 }
 
 const useReqestClient = () => {
+    const userCtx = useContext(UserContext);
     const [requestState, dispatch] = useReducer(requestReducer, {
         err: '',
         loading: false,
         res: {},
     })
 
-    const requestHandler = useCallback(async (method = 'GET', URL, data, headers = {}) => {
+    const requestHandler = useCallback(async (method = 'GET', URL, data, headers = {
+        Authorization: "Bearer " + userCtx.token
+    }) => {
         dispatch({ type: "loading", value: true })
         dispatch({ type: "err", value: null });
         console.log("submit")
@@ -35,6 +40,7 @@ const useReqestClient = () => {
             headers: headers
         }).then((res) => {
             dispatch({ type: "loading", value: false });
+            console.log(res);
             response = res.data
             // dispatch({ type: 'res', value: res.data });
         }
