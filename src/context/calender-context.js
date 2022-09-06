@@ -1,18 +1,10 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios';
-// import { useNavigate } from 'react-router';
-// import Box from '../components/UI/box';
 import { UserContext } from './user-context';
-// import { Link } from 'react-router-dom';
-// import Input from '../components/UI/input'
-
-
 export const CalenderContext = createContext({
     date: [],
     dateUpdate: () => { }
 });
-
-
 const CalenderProvider = (props) => {
     const { token } = useContext(UserContext);
 

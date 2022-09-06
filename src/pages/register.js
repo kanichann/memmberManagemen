@@ -76,9 +76,6 @@ const Register = () => {
             'POST', "http://localhost:3002/register", data
         ).then((res) => {
             if (res) {
-                // localStorage.setItem('token', res.token);
-                // localStorage.setItem('token', res.token);
-                // await userCtx.setToken(res.token);
                 console.log('成功', 'res', res)
                 return userCtx.login(res)
             }
@@ -95,35 +92,12 @@ const Register = () => {
                 console.log("登録に失敗しました")
             }
             )
-        // let resData = JSON.parse(res);
-        // console.log(resData);
-        // if (res) {
-        //     // localStorage.setItem('token', res.token);
-        //     // localStorage.setItem('token', res.token);
-        //     // await userCtx.setToken(res.token);
-        //     console.log('成功', 'res', res)
-        //     const admin = await userCtx.login(res.token)
-        //     console.log(admin);
-        //     if (admin === 0) {
-        //         navigate('/');
-        //     }
-        //     if (admin === 1) {
-        //         navigate('/admin')
-        //     }
-        // }
-        // if (!res.data) {
-        //     dispatch({ type: 'err', val: true })
-        // }
-
     }
 
     const inputHandler = useCallback((inputId, val, isValid) => {
         console.log(inputId);
         return dispatch({ inputId: inputId, type: 'change', val: val, isValid: isValid })
     }, [])
-
-
-
     return (
         <>
             <div className=' w-80 mx-auto '>

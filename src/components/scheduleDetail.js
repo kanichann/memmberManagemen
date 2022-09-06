@@ -1,10 +1,5 @@
 import React, { useContext, useState, useReducer, useCallback } from 'react';
 import Input from './UI/input'
-import Modal from './UI/modal'
-import SelectInput from './UI/selectInput';
-import TextInput from './UI/textInput';
-import CheckInput from './UI/checkInput';
-import axios from 'axios';
 import { UserContext } from "../context/user-context";
 import { CalenderContext } from '../context/calender-context';
 import useReqestClient from '../hooks/requset-hook'

@@ -1,11 +1,6 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import Box from "../components/UI/box";
-import axios from 'axios'
-import Calender from "../components/calender";
 import { UserContext } from "../context/user-context";
-import CalenderProvider from '../context/calender-context'
-import Loading from "../components/UI/loading";
-import Notification from "../components/notification";
 import Button from "../components/UI/button";
 const PersonalInfo = () => {
     const userCtx = useContext(UserContext);

@@ -20,7 +20,6 @@ const NotificationAdmin = (props) => {
             <Modal show={notificationdata} delete={() => { setNotificationdata((val) => !val) }}>
                 <NotificationDetail delete={() => { setNotificationdata((val) => !val) }} data={notificationdata} />
             </Modal>
-            {/* {notificationdata && <NotificationDetail read={true} delete={() => { setNotificationdata(null) }} data={notificationdata} />} */}
         </>
 
     )

@@ -22,6 +22,7 @@ import InfoListEmail from './pages/personal_info/info_list_email'
 import InfoChangeAddress from './pages/personal_info/info_change_address'
 import InfoListAddress from './pages/personal_info/info_list_address'
 import MemberInfo from './pages/member_info';
+import MemberInfomationProvider from "./context/member-context";
 // import { animated, useTransition, config } from 'react-spring';
 
 
@@ -91,7 +92,7 @@ function App() {
             }
             {userCtx.token && userCtx.admin !== null && userCtx.admin && (<>
               <Route path='/admin' element={<Admin />} />
-              <Route path='/MemberInfo/' element={<MemberInfo />} />
+              <Route path='/MemberInfo/' element={<MemberInfomationProvider><MemberInfo /></MemberInfomationProvider>} />
               {/* <Route path='/memberSummary' element={<MemberSummary />} /> */}
               <Route path='*' element={<Navigate to="/admin" />} />
             </>

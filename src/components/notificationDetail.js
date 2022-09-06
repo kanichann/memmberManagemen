@@ -1,11 +1,8 @@
 import react, { useContext } from 'react';
 
 import { NotificationContext } from "../context/notification-context";
-import Modal from './UI/modal';
-import CheckInput from './UI/checkInput';
 import { UserContext } from '../context/user-context';
-import useReqestClient from '../hooks/requset-hook'
-import axios from 'axios';
+import useReqestClient from '../hooks/requset-hook';
 const NotificationDetail = (props) => {
     const NotificationCtx = useContext(NotificationContext);
     const userCtx = useContext(UserContext);

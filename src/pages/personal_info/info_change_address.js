@@ -1,11 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { useReducer } from "react";
 import { useContext } from "react";
 import Box from "../../components/UI/box";
 import InputAddress from "../../components/UI/input_address";
 import useReqestClient from '../../hooks/requset-hook'
-import { VALIDATOR_REQUIRE } from '../../util/validate';
 import { UserContext } from '../../context/user-context';
 import Button from "../../components/UI/button";
 

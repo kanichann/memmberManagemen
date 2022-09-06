@@ -1,12 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from 'axios';
-// import { useNavigate } from 'react-router';
-// import Box from '../components/UI/box';
 import { UserContext } from './user-context';
-// import { Link } from 'react-router-dom';
-// import Input from '../components/UI/input'
-
-
 export const NotificationContext = createContext({
     data: [],
     setdata: () => { },
@@ -16,10 +10,6 @@ export const NotificationContext = createContext({
     setnotRead: () => { }
 
 });
-
-
-// ここでスケジュール取得出力をかく！！！！！！！！
-// s
 
 const NotificationProvider = (props) => {
     const { token, admin } = useContext(UserContext);
@@ -39,21 +29,13 @@ const NotificationProvider = (props) => {
                     headers:
                         { Authorization: "Bearer " + token },
                 }
-                // axios.get("http://localhost:3002/memberinfo",
-                //     {
-                //         headers:
-                //             { Authorization: "Bearer " + token },
-                //     }
 
             ).then((res) => {
-                // setName(res.data.name);
                 setdata(res.data);
 
             }).catch((err) => {
                 console.log('fetchErr', err);
-                // setError(err);
-                // localStorage.removeItem('token');
-                // setToken(null);
+
             })
 
         }

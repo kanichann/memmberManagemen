@@ -56,25 +56,12 @@ const UserProvider = (props) => {
         }
     }, [token])
 
-    // async function getToken() {
-    //     if (token) {
-    //         const res = await axios({
-    //             method: 'GET',
-    //             url: "http://localhost:3002/memberinfo",
-    //             headers: "bearer " + token,
-    //         })
-    //         setName(res.name);
-    //         setAdmin(res.admin === 1 ? true : false);
-    //     }
-    // }
     async function login(loginRes) {
-        // const time = new Date().getTime() + 1000 * 60 * 60
-        const time = new Date().getTime() + 1000 * 60 * 600
+        const time = new Date().getTime() + 1000 * 60 * 60
         localStorage.setItem('token', loginRes.token);
         localStorage.setItem('time', time);
         setExpireTime(time)
         setToken(loginRes.token);
-        // logoutTimer = setTimeout(logout, 6000)
         if (loginRes.admin === 1) {
             localStorage.setItem('admin', 1);
             setAdmin(1);
@@ -96,7 +83,6 @@ const UserProvider = (props) => {
     return (
         <UserContext.Provider value={CtxValue}>
             <Modal show={expireTimeModal} delete={() => { setExpireTimeModal(() => false) }}>
-                {/* <NotificationDetail delete={() => { setNotificationdata((val) => !val) }} data={notificationdata} /> */}
                 認証の有効期限が切れました。
                 ログインし直してください。
             </Modal>

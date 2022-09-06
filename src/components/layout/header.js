@@ -6,13 +6,13 @@ const Header = () => {
     const userCtx = useContext(UserContext)
     return (
         <header className="shadow-sm flex mb-6 justify-between items-center bg-white px-6 py-4">
-            <p className=" text-xl ">KaniManegement</p>
-            <ul className=" flex gap-6">
+            <p className="text-xl">KaniManegement</p>
+            <ul className="flex gap-6">
                 {userCtx.token && <>
                     <li>
                         <Link to={'/'}>プロフィール</Link></li>
-                    <li>
-                        <Link to={'/personal_info'}>個人情報設定</Link></li>
+                    {userCtx.admin && <li>
+                        <Link to={'/personal_info'}>個人情報設定</Link></li>}
                     {userCtx.admin && <li>
                         <Link to={'/MemberInfo/'}>会員情報</Link></li>}
 

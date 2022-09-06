@@ -1,12 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { CalenderContext } from '../context/calender-context';
-import ScheduleDetailInsert from './scheduleDetailInsert';
-import ScheduleDetail from './scheduleDetail';
-
 const CalendarCell = (props) => {
     const calenderCtx = useContext(CalenderContext)
-    const [detailInsertShow, setDetailInsertShow] = useState(false);
-    const [detailShow, setDetailShow] = useState(false);
 
 
     const scheduleBox_glay = "block text-left w-full shadow-sm text-xs border border-gray-200 bg-gray-50 overflow-hidden px-1"
@@ -17,7 +12,6 @@ const CalendarCell = (props) => {
         <>
             <td className={props.highLight && "bg-amber-300"}>
                 <div className='h-full w-full block'>
-                    {/* <div className="flex justify-between"> */}
                     <div>
                         {props.date}
                     </div>
@@ -28,7 +22,6 @@ const CalendarCell = (props) => {
                             <span className='absolute block bg-yellow-500 w-3 h-0.5 top-1/2 left-1/2 rotate-90 -translate-y-1/2 -translate-x-1/2 '></span>
                         </div>
                     </a>
-                    {/* </div> */}
                     <div>
                         {calenderCtx.date.length !== 0 && calenderCtx.date.map((day) => {
 
@@ -36,15 +29,10 @@ const CalendarCell = (props) => {
                                 return <button className="" onClick={() => props.setDetailShow(day)} className={day.schedule_type === 1 ? scheduleBox_red : day.schedule_type === 2 ? scheduleBox_green : scheduleBox_glay}>{day.schedule}</button>
                             }
                         })}
-                        {/* === props.scheduleDataNum ? calenderCtx.date : '' */}
                     </div>
                     {props.highLight && <div>today</div>}
-
                 </div>
                 {props.children}
-                {/* {detailInsertShow && <div><ScheduleDetailInsert delete={() => { setDetailInsertShow((val) => !val) }} scheduleDataNum={props.scheduleDataNum} scheduleDate={props.scheduleDate} /></div>}
-                {detailShow && <div><ScheduleDetail delete={() => { setDetailShow(() => null) }} schedule={detailShow} scheduleDataNum={props.scheduleDataNum} scheduleDate={props.scheduleDate} /></div>} */}
-
             </td>
         </>
     )

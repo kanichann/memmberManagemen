@@ -15,7 +15,7 @@ const Admin = () => {
     }
     return (
         <CalenderProvider>
-            <article className=" gap-4 grid grid-cols-4">
+            <article className="mb-[50px] gap-4 grid grid-cols-4">
                 <div className="col-span-full">
                     <Box>
                         <h1 className="ttl-1">管理者ページ</h1>

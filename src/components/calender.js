@@ -7,23 +7,16 @@ const today = new Date();
 
 
 const Calender = () => {
-    // const [count, setCount] = useState(0);
     const [year, setYear] = useState(new Date().getFullYear())
     const [month, setMonth] = useState(new Date().getMonth())
-    // let year = new Date().getFullYear();
-    // let month = new Date().getMonth();
 
     let startDayOfWeek = new Date(year, month, 1).getDay();
     let endDate = new Date(year, month + 1, 0).getDate();
     let lastMonthEndDate = new Date(year, month, 0).getDate();
     let row = Math.ceil((startDayOfWeek + endDate) / week.length);;
-    // console.log(startDayOfWeek, 'startDayOfWeek')
-    // console.log(endDate, 'endDate ')
-    // console.log(lastMonthEndDate, 'lastMonthEndDate')
-    // console.log(row, 'row');
+
 
     let showDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    console.log(showDate);
     // calendar作成
 
     function prevMonth() {

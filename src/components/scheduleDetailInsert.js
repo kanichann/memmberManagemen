@@ -10,27 +10,6 @@ import { UserContext } from "../context/user-context";
 import { CalenderContext } from '../context/calender-context';
 
 
-// const reducer = (state, action) => {
-
-//     switch (action.type) {
-//         case 'scheduleDetail':
-//             return { ...state, scheduleDetail: action.value }
-//         case 'schedule':
-//             return { ...state, schedule: action.value }
-//         case 'type':
-//             return { ...state, type: action.value }
-//         case 'startTime':
-//             return { ...state, startTime: action.value }
-//         case 'endTime':
-//             return { ...state, endTime: action.value }
-//         case 'memberOpen':
-//             return { ...state, memberOpen: !state.memberOpen }
-//         case 'err':
-//             return { ...state, err: action.value }
-//         default:
-//             return state
-//     }
-// }
 const inputReducer = (state, action) => {
     switch (action.type) {
         case 'change':
@@ -61,15 +40,6 @@ const inputReducer = (state, action) => {
             return state;
     }
 }
-// const initialState = {
-//     schedule: '',
-//     scheduleDetail: '',
-//     type: 0,
-//     startTime: '',
-//     endTime: '',
-//     err: '',
-//     memberOpen: false
-// }
 
 const hours = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"];
 const minutes = ["00", "15", "30", "45"]
@@ -78,11 +48,6 @@ const ScheduleDetailInsert = (props) => {
     const userCtx = useContext(UserContext);
     const calenderCtx = useContext(CalenderContext)
     const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
-    // const [state, dispatch] = useReducer(reducer, initialState);
-
-
-
-
     const [ScheduleState, dispatch] = useReducer(inputReducer,
         {
             inputs: {
@@ -192,8 +157,6 @@ const ScheduleDetailInsert = (props) => {
                                 return (<option key={`${hour}:${minute}`} value={`${hour}:${minute}`}>{`${hour}:${minute}`}</option>)
                             })
                         })}
-
-
                     </Input>
                     <Input name="scheduleDetail" type="textarea" labelName="予定詳細" handler={inputHandler} />
                     {userCtx.admin &&

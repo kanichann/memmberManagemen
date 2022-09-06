@@ -1,15 +1,12 @@
-import React, { useContext, useState, useReducer, useCallback } from 'react';
-import axios from 'axios';
+import React, { useContext, useReducer, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import Box from '../components/UI/box';
 import { UserContext } from '../context/user-context';
 import { Link } from 'react-router-dom';
 import Input from '../components/UI/input'
 import Button from '../components/UI/button'
-import { VALIDATOR_EMAIL, VALIDATOR_REQUIRE } from '../util/validate';
+import { VALIDATOR_REQUIRE } from '../util/validate';
 import useReqestClient from '../hooks/requset-hook'
-import Loading from '../components/UI/loading';
-
 const inputReducer = (state, action) => {
 
     switch (action.type) {
@@ -59,7 +56,6 @@ const Login = () => {
         }
     )
     const { requestHandler, RequestLoading, RequestErr } = useReqestClient();
-    // const inputHandler = () => { };
     const inputHandler = useCallback((inputId, val, isValid) => {
         return dispatch({ inputId: inputId, type: 'change', val: val, isValid: isValid })
     }, [])
@@ -87,15 +83,6 @@ const Login = () => {
             }).catch(err => { console.log(err); })
 
     }
-
-
-    // メンバー内になければアドミン枠を検索しにいきそちらにあればアドミン画面へ遷移
-
-    // const [pass, passHandler] = useState('');
-    // const [email, emailHandler] = useState('');
-    // const [err, errHandler] = useState('');
-
-
     return (
         <div className='transition'>
             <div className=' w-80 mx-auto '>

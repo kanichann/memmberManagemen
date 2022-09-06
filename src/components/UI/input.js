@@ -13,9 +13,7 @@ const reducer = (state, action) => {
                 let validateResult = validate(action.val, action.validaters);
                 isvalid = validateResult.isvalid;
                 errMessage = validateResult.errMessage;
-
             };
-            // action.propsFunction(action.nameId, action.val, isvalid);
             return {
                 ...state,
                 value: action.val,
@@ -49,8 +47,7 @@ const Input = props => {
     useEffect(() => {
         props.handler(props.name, inputState.value, inputState.isValid)
     }, [inputState.value, inputState.isValid])
-    // 登録変更の際に以前の登録情報が反映されている状態にしたい
-    //　以前の情報がある場合はprops.valに設定する
+
     useEffect(() => {
         if (props.val) {
             dispatch({

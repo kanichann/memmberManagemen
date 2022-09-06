@@ -1,8 +1,7 @@
 @tailwind base;
-
 @tailwind components;
-
 @tailwind utilities;
+@tailwind variants;
 
 .ttl-1 {
   @apply text-xl font-bold mb-6;

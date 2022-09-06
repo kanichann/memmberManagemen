@@ -1,17 +1,9 @@
 
 import React, { useContext, useReducer, useCallback } from "react";
-import { Link } from "react-router-dom";
 import Box from "../components/UI/box";
-import Calender from "../components/calender";
 import { UserContext } from "../context/user-context";
-import CalenderProvider from '../context/calender-context'
 import Loading from "../components/UI/loading";
 import Input from '../components/UI/input'
-import Modal from '../components/UI/modal'
-import SelectInput from '../components/UI/selectInput';
-import TextInput from '../components/UI/textInput';
-import FileInput from '../components/UI/fileInput';
-import axios from 'axios';
 import useReqestClient from '../hooks/requset-hook'
 
 const inputReducer = (state, action) => {
@@ -53,39 +45,10 @@ const inputReducer = (state, action) => {
         default:
             return state;
     }
-    // switch (action.type) {
-    //     case 'title':
-    //         return { ...state, title: action.payload }
-    //     case 'contents':
-    //         return { ...state, contents: action.payload }
-    //     case 'type':
-    //         return { ...state, type: action.payload }
-    //     case 'pdf':
-    //         return { ...state, pdf: action.payload }
-    //     case 'pdfname':
-    //         return { ...state, pdfname: action.payload }
-    //     case 'loading':
-    //         return { ...state, loading: action.payload }
-    //     case 'end':
-    //         return { ...state, end: action.payload }
-    //     case 'err':
-    //         return { ...state, err: action.payload }
-    //     default:
-    //         return state
-    // }
+
 }
 
 
-// const initialState = {
-//     title: '',
-//     contents: '',
-//     type: 0,
-//     pdf: '',
-//     pdfname: '',
-//     loading: false,
-//     end: '',
-//     err: '',
-// }
 
 const NotificationSubmit = () => {
     const userCtx = useContext(UserContext);
